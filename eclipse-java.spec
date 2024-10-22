@@ -1,16 +1,17 @@
 %global debug_package %{nil}
 %global _missing_build_ids_terminate_build 0
+%define __osgi_path %{nil}
 
 %define name eclipse-java
 %define exclusivearch x86_64
-%define rel 2023-03/R
-%define reldash 2023-03-R
+%define rel 2024-12/M1
+%define reldash %gsub %{rel} / -
 %define srcfilename %{name}-%{reldash}-linux-gtk-%{exclusivearch}.tar.gz
 
 %define _eclipsedir %{_libdir}/eclipse
 
 Name:           %{name}
-Version:        4.27
+Version:        4.34
 Release:        1%{?dist}
 Summary:        Highly extensible IDE (Java version)
 
@@ -37,7 +38,7 @@ The essential tools for any Java developer, including a Java IDE, a CVS client, 
 install -d %{buildroot}%{_libdir}
 cp -r eclipse %{buildroot}%{_eclipsedir}
 install -d %{buildroot}%{_bindir}
-ln -s "$(realpath -m --relative-to %{_bindir}/eclipse %{_libdir}/eclipse/eclipse)" %{buildroot}%{_bindir}/eclipse
+ln -s "$(realpath -m --relative-to %{_bindir} %{_libdir}/eclipse/eclipse)" %{buildroot}%{_bindir}/eclipse
 
 desktop-file-install --dir=%{buildroot}%{_datadir}/applications %{SOURCE1}
 desktop-file-validate %{buildroot}/%{_datadir}/applications/eclipse.desktop
@@ -46,7 +47,7 @@ for i in 16 22 24 32 48 64 128 256 512 1024 ; do
   install -Dm644 eclipse/plugins/org.eclipse.platform_%{version}*/"eclipse$i.png" "%{buildroot}%{_datadir}/icons/hicolor/${i}x${i}/apps/eclipse.png"
 done
 
-find %{buildroot}%{_eclipsedir}/plugins/com.sun.jna_5.13.0.v20230812-1000/com/sun/jna -type d ! -iname '*linux-x86-64' ! -iname '*jna' | xargs rm -rf
+find %{buildroot}%{_eclipsedir}/plugins/com.sun.jna_*/com/sun/jna -type d ! -iname '*linux-x86-64' ! -iname '*jna' | xargs rm -rf
 
 %files
 %{_eclipsedir}
@@ -55,6 +56,8 @@ find %{buildroot}%{_eclipsedir}/plugins/com.sun.jna_5.13.0.v20230812-1000/com/su
 %{_datadir}/icons/hicolor/*/apps/eclipse.png
 
 %changelog
+* Tue Oct 22 2024 bober <sebastian.saletnik@gmail.com> - 4.34-1
+- Release 4.27
 * Wed Mar 22 2023 dusansimic <dusan.simic1810@gmail.com> - 4.27-1
 - Release 4.27
 * Mon Dec 26 2022 dusansimic <dusan.simic1810@gmail.com> - 4.26-1
